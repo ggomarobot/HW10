@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<head>
+	<title>API FUN</title>
+	<meta charset="utf-8"/>
+	<script>
+
+		function getCovidStat() {
+			// make HTTP request after page is loaded
+			request = new XMLHttpRequest();
+			console.log("1 - request object created");
+ 
+			// set the URL for the AJAX request to be the JSON file
+ 
+		request.open("GET", "https://api.covid19api.com/summary", true)
+
+			console.log("2 - opened request file");
+ 
+			// set up event handler/callback
+
+			request.onreadystatechange = function() {
+				 
+				if (request.readyState == 4 && request.status == 200) {
+
+				// if AJAX request succeeded, retrieve the data and use it
+				console.log("5 - response received");
+				result = request.responseText;
+					
+				document.getElementById("data").innerHTML = result;
+				stats = JSON.parse(result);
+				
+				// get the COVID informations of confirmed cases in South Korea
+				document.getElementById("data").innerHTML = stats["Countries"][88]["Country"] + "<br />" + "New Cases: " + stats["Countries"][88]["NewConfirmed"] + "<br />" + "Total cases: " + stats["Countries"][88]["TotalConfirmed"] + "<br />" +
+				"As of: " + stats["Countries"][88]["Date"]; 
+					
+				}
+				else if (request.readyState == 4 && request.status != 200) {
+					
+					// if AJAX request was done but the file could not be loaded properly, let the programmer know 
+					document.getElementById("data").innerHTML = "Something is wrong!  Check the logs to see where this went off the rails";
+
+				}
+
+				else if (request.readyState == 3) {
+
+					document.getElementById("data").innerHTML = "Too soon!  Try again";
+
+				}
+
+			}
+
+			request.send();
+			console.log("4 - Request sent");
+		}
+	</script>
+</head>
+
+
+<body onload="getCovidStat()">
+	<div style = "margin: 30px">
+
+		<p>• describe the API you selected and what it does<br /><br />
+			The API I chose is COVID 19 API and it shows the total number of Covid related informations such as confirmed cases, newly confirmed cases, death cases and what not.<br />It also shows cases by country.<br /><br />
+			• cite the website where you found it<br /><br />
+			I found this API from https://github.com/public-apis/public-apis under Health Section. <br /><br />
+			• describe the options you used for the API request<br /><br />
+			Luckily, I followed the exact same step as Prof. DiOrio did in our class.<br />I guess because this API is for public interest, it did not require any sign-up or additional keys or tokens.<br /><br />
+			• give two applications where this API would be helpful.<br /><br />
+			This API would be useful to any departments of Public Health, Hospitals for tracking the rate of spread, or the trend in neighboring countries to prevent potential upcoming outbreaks.<br />
+			Also, this API would be useful to mask manufacturers to decide how much they would need to produce more in the future.
+		</p>
+
+	</div> 
+	
+	<h1 style = "margin: 30px">COVID Stats</h1>
+	<div id="data" style = "margin: 30px">Loading...</div>
+
+</body>
+</html>
